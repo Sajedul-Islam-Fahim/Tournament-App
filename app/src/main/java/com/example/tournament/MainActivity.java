@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private EditText teamA, teamB;
-    private Button save;
+    private Button save,next;
     private List<String> teama,teamb;
     DatabaseReference referenceA,referenceB;
     @Override
@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         teamA=findViewById(R.id.editTextTextPersonName);
         teamB=findViewById(R.id.editTextTextPersonName2);
+        next=findViewById(R.id.button2);
 
         teama = new ArrayList<>();
         teamb = new ArrayList<>();
@@ -43,25 +44,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String teamAname = teamA.getText().toString();
-                String teamBname = teamA.getText().toString();
+                String teamBname = teamB.getText().toString();
                 if (teamAname.isEmpty() || teamBname.isEmpty())
                 {
                     Toast.makeText(MainActivity.this, "Please enter the player name", Toast.LENGTH_SHORT).show();
                 }
                 else{
+
                     teama.add(teamAname);
                     teamb.add(teamBname);
                 }
-                if (teama.size()==20 && teamb.size()==20)
-                {
-                    Intent intent = new Intent(MainActivity.this,RoundTwoActivity.class);
-                    startActivity(intent);
-                }
+
                 referenceA.setValue(teama).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
-                            Toast.makeText(MainActivity.this, "TeamA is stored successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Player "+teama.size()+" is stored successfully", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -70,11 +68,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
-                            Toast.makeText(MainActivity.this, "TeamB is stored successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Player "+teamb.size()+" is stored successfully", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
 
+            }
+        });
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (teama.size()==20 )
+                    if( teamb.size()==20)
+                {
+                    Intent intent = new Intent(MainActivity.this,RoundTwoActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }
